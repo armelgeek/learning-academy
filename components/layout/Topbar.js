@@ -46,7 +46,7 @@ const Topbar = () => {
 
   return (
     <div className="flex justify-between items-center p-4">
-      <Link href="/">
+      <Link href="/public">
         <Image src="/next.svg" height={100} width={200} alt="logo" />
       </Link>
 
@@ -96,7 +96,7 @@ const Topbar = () => {
                   </Link>
                 ))}
               </div>
-              
+
               {pathName.startsWith("/instructor") && (
                 <div className="flex flex-col gap-4">
                   {sidebarRoutes.map((route) => (
