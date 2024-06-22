@@ -28,8 +28,8 @@ const SectionsDetails = ({ course, section, purchase, muxData, resources, progre
     const buyCourse = async () => {
         try {
             setIsLoading(true);
-           // const response = await axios.post(`/api/courses/${course.id}/checkout`);
-         //   window.location.assign(response.data.url);
+            const response = await axios.post(`/api/courses/${course.id}/checkout`);
+            window.location.assign(response.data.url);
         } catch (err) {
             console.log("Failed to chechout course", err);
             toast.error("Something went wrong!");
@@ -58,7 +58,7 @@ const SectionsDetails = ({ course, section, purchase, muxData, resources, progre
                             courseId={course.id}
                             sectionId={section.id}
                             isCompleted={!!progress?.isCompleted}
-                        /> // !! converts falsy values to boolean false
+                        />
                     )}
                 </div>
             </div>
