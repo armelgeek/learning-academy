@@ -14,15 +14,7 @@ import {useConfettiStore} from "@/hooks/use-confetti-store";
 import {useRouter} from "next/navigation";
 
 
-const SectionsDetails =  ({
-                              course,
-                              section,
-                              purchase,
-                              muxData,
-                              resources,
-                              progress,
-                              nextSection
-}) => {
+const SectionsDetails =  ({ course, section, purchase, muxData, resources, progress, nextSection, isOwn }) => {
     const router = useRouter();
     const confetti = useConfettiStore();
     const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +65,14 @@ const SectionsDetails =  ({
 
                 <div className="flex gap-4">
                     <SectionMenu course={course} />
-                    {!purchase ? (
+                    {purchase || isOwn ? (
+                            <ProgressButton
+                                courseId={course.id}
+                                sectionId={section.id}
+                                nextSection={nextSection?.id}
+                                isCompleted={!!progress?.isCompleted}
+                            />
+                    ) : (
                         <Button onClick={buyCourse}>
                             {isLoading ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -81,13 +80,7 @@ const SectionsDetails =  ({
                                 <p>Buy this course</p>
                             )}
                         </Button>
-                    ) : (
-                        <ProgressButton
-                            courseId={course.id}
-                            sectionId={section.id}
-                            nextSection={nextSection?.id}
-                            isCompleted={!!progress?.isCompleted}
-                        />
+
                     )}
                 </div>
             </div>

@@ -91,6 +91,14 @@ const SectionDetailsPage = async ({ params }) => {
             position: "asc",
         }
     });
+    const ownCourse = await db.course.findUnique({
+        where : {
+            id : params.courseId,
+            instructorId: userId
+        }
+    })
+
+    let isOwn = !!ownCourse;
 
     return (
         <SectionsDetails
@@ -101,6 +109,7 @@ const SectionDetailsPage = async ({ params }) => {
             resources={resources}
             progress={progress}
             nextSection={nextSection}
+            isOwn={isOwn}
         />
     );
 };

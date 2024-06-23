@@ -37,7 +37,7 @@ const LearningPage = async () => {
     }
 
     const completedCourses = courses.filter((course) => course.progress === 100);
-    const coursesInProgress = courses.filter((course) => course.progress !== 100)
+    const coursesInProgress = courses.filter((course) => (course.progress ?? 0) < 100)
 
     return (
         <div className="px-4 py-6 md:mt-5 md:px-10 xl:px-16">
