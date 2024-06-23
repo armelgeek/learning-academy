@@ -1,19 +1,25 @@
-'use client';
+
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LucideIcon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Separator } from "@/components/ui/separator";
+import { usePathname } from "next/navigation";
+import { FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import z from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
 
-const Settings = ({ icon: Icon, label }) => {
+const SHEET_SIDES = ["top", "right", "bottom", "left"];
 
+const Settings = ({icon: Icon,  label, name, username  }) => {
     const pathname = usePathname();
- 
+
+    const onClick = () => {
+        console.log("Cliqué!!!");
+    }
+
     const formSchema = z.object({
         name: z.string().min(1, {
             message: "Le nom est trop court"
@@ -24,72 +30,88 @@ const Settings = ({ icon: Icon, label }) => {
     });
 
     const form = useForm({
-        resolver : zodResolver(formSchema),
-        defaultValues : {
-            name : "",
-            username : "",
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: name || "",
+            username: username || "",
         }
-    })
+    });
+    const methods = useForm();
 
+    const { isSubmitting, isValid } = form.formState;
 
-
-    const onClick = () => {
-        console.log(pathname)
-
+    const onSubmit = (values) => {
+        console.log(values);
+        toast.success("Profil modifié avec succès");
     }
 
     return (
         <div className="grid grid-cols-2 gap-2">
-
             <Sheet>
-                <SheetTrigger asChild>
+                <SheetTrigger asChild aria-controls="radix-:Rl6rcq:">
                     <button
                         type="button"
-                        onClick={onClick}
-                        className={cn(`
-                        flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20`
-                        )} >
-                        <div className="flex items-center gap-x-2 py-4">
-                            <Icon
-                                size={22}
-                                className={cn(`text-slate-500`,)} />
-
-                            {label}
-                        </div>
-                        <div className={cn(`ml-auto opacity-0 border-2 border-sky-700 h-full transition-all`,)} />
+                        onClick={onClick}>
+                        Modifier
                     </button>
                 </SheetTrigger>
-                <SheetContent side="left">
+                <SheetContent>
                     <SheetHeader>
-                        <SheetTitle>Modifier le profil</SheetTitle>
+                        <SheetTitle>{label}</SheetTitle>
                         <SheetDescription>
-                            {"Modifie ton nom et ton nom d'utilisateur. Les changements seront visibles par les autres."}
+                            {"Modifiez votre nom et votre nom d'utilisateur. Les modifications seront visibles pour les autres."}
                         </SheetDescription>
                     </SheetHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Name
+                    <FormProvider {...methods}>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem className="mt-4 mb-6">
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Entrez votre nom..."
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Label>
+                                {"Nom d'utilisateur"}
                             </Label>
-                            <Input id="name" value="Armel Wanes" className="col-span-3" />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right text-sm">
-                                Username
-                            </Label>
-                            <Input id="username" value="@armelwanes" className="col-span-3" />
-                        </div>
-                    </div>
-                    <SheetFooter>
-                        <SheetClose asChild>
-                            <Button type="submit" className="bg-blue-900 hover:bg-blue-900/80">Enregistrer les modifications</Button>
-                        </SheetClose>
-                    </SheetFooter>
+                            <Separator className="bg-slate-800 w-[45px] mt-3 text-bold" />
+                            <FormField
+                                control={form.control}
+                                name="username"
+                                render={({ field }) => (
+                                    <FormItem className="mt-8">
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Entrez votre nom d'utilisateur..."
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <SheetFooter>
+                                <SheetClose asChild>
+                                    <Button type="submit" className="bg-blue-900 hover:bg-blue-900/80 mt-4" aria-controls="radix-:Rl6rcq:"
+                                            disabled={!isValid || isSubmitting}>
+                                        Sauvegarder les modifications
+                                    </Button>
+                                </SheetClose>
+                            </SheetFooter>
+                        </form>
+                    </FormProvider>
                 </SheetContent>
             </Sheet>
-
         </div>
-    )
+    );
 }
 
 export default Settings;

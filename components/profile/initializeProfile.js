@@ -77,7 +77,7 @@ const InitializeProfileBox = ({ isOpen }) => {
                     Nom
                 </Label>
                 <Separator className="bg-slate-800 w-[30px] text-bold" />
-                <Form {...form}>
+
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
                             control={form.control}
@@ -122,7 +122,6 @@ const InitializeProfileBox = ({ isOpen }) => {
                             </DialogTrigger>
                         </div>
                     </form>
-                </Form>
             </DialogContent>
         </Dialog>
     );
