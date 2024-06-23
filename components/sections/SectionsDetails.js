@@ -21,7 +21,15 @@ import ProgressButton from "./ProgressButton";
 import SectionMenu from "../layout/SectionMenu";
 
 
-const SectionsDetails = ({ course, section, purchase, muxData, resources, progress }) => {
+const SectionsDetails =  ({
+                              course,
+                              section,
+                              purchase,
+                              muxData,
+                              resources,
+                              progress,
+                              nextSection
+}) => {
     const [isLoading, setIsLoading] = useState(false);
     const isLocked = !purchase && !section.isFree;
 
@@ -57,6 +65,7 @@ const SectionsDetails = ({ course, section, purchase, muxData, resources, progre
                         <ProgressButton
                             courseId={course.id}
                             sectionId={section.id}
+                            nextSection={nextSection?.id}
                             isCompleted={!!progress?.isCompleted}
                         />
                     )}

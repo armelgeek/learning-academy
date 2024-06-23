@@ -78,6 +78,18 @@ const SectionDetailsPage = async ({ params }) => {
             },
         },
     });
+    const nextSection = await db.section.findFirst({
+        where: {
+            courseId: courseId,
+            isPublished: true,
+            position: {
+                gt: section.position,
+            }
+        },
+        orderBy: {
+            position: "asc",
+        }
+    });
 
     return (
         <SectionsDetails
@@ -87,6 +99,7 @@ const SectionDetailsPage = async ({ params }) => {
             muxData={muxData}
             resources={resources}
             progress={progress}
+            nextSection={nextSection}
         />
     );
 };

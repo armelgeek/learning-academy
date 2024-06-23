@@ -7,20 +7,30 @@ import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader2 } from "lucide-react";
+import {useConfettiStore} from "@/hooks/use-confetti-store";
 
 
-const ProgressButton = ({ courseId, sectionId, isCompleted }) => {
+const ProgressButton = ({ courseId, sectionId, nextSection , isCompleted }) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-
+    const confetti = useConfettiStore();
     const onClick = async () => {
         try {
             setIsLoading(true);
             await axios.post(`/api/courses/${courseId}/sections/${sectionId}/progress`, {
                 isCompleted: !isCompleted,
             });
-            toast.success("Progress updated!");
+
             router.refresh();
+            if(!nextSection && !isCompleted) {
+                confetti.onOpen();
+                toast.success("Progress updated!");
+            } else if(isCompleted){
+                router.push(`/courses/${courseId}/sections/${sectionId}`)
+            }
+            else if (nextSection) {
+                router.push(`/courses/${courseId}/sections/${nextSection}`)
+            }
         } catch (err) {
             console.log("Failed to update progress", err);
             toast.error("Something went wrong!");
