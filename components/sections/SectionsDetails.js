@@ -120,7 +120,7 @@ const SectionsDetails =  ({ course, section, purchase, muxData, resources, progr
                 {comments.length > 0 && (
                     comments.map((comment,index) => (
                         <CommentItem
-                            key={index}
+                            key={comment.id}
                             comment={comment}
                         />
                     ))
