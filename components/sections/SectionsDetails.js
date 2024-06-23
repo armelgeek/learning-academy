@@ -2,7 +2,7 @@
 import toast from "react-hot-toast";
 import { useState } from "react";
 import axios from "axios";
-import { File, Loader2, Lock } from "lucide-react";
+import {File, Loader2, Lock, MessagesSquareIcon, MinusIcon} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import ReadText from "@/components/custom/ReadText";
@@ -13,10 +13,9 @@ import SectionMenu from "../layout/SectionMenu";
 import {useConfettiStore} from "@/hooks/use-confetti-store";
 import {useRouter} from "next/navigation";
 import CommentInput from "@/components/sections/CommentInput";
-import {Separator} from "@/components/ui/separator";
+import CommentItem from "@/components/comments/Comments";
 
-
-const SectionsDetails =  ({ course, section, purchase, muxData, resources, progress, nextSection, isOwn }) => {
+const SectionsDetails =  ({ course, section, purchase, muxData, resources, progress, nextSection, isOwn, comments }) => {
     const router = useRouter();
     const confetti = useConfettiStore();
     const [isLoading, setIsLoading] = useState(false);
@@ -105,11 +104,28 @@ const SectionsDetails =  ({ course, section, purchase, muxData, resources, progr
                 />
             )}
             <div>
-                
+
                 <CommentInput
                     courseId={course.id}
                     sectionId={section.id}
                 />
+                <div className="mt-5 w-full flex flex-row ">
+                    <MessagesSquareIcon className="h-6 w-6 mt-2" />
+                    <div className="text-medium text-semibold mt-2">
+                        {comments.length} Commentaire(s)
+                    </div>
+                    <MinusIcon className="h-6 w-6 mt-2" />
+                </div>
+                <p className="mt-4">Commentaire(s)</p>
+                {comments.length > 0 && (
+                    comments.map((comment,index) => (
+                        <CommentItem
+                            key={index}
+                            comment={comment}
+                        />
+                    ))
+                )}
+
             </div>
             <div>
                 <h2 className="text-xl font-bold mb-5">Resources</h2>

@@ -97,9 +97,11 @@ const SectionDetailsPage = async ({ params }) => {
             instructorId: userId
         }
     })
-
-    let isOwn = !!ownCourse;
-
+    const comments = await db.comments.findMany({
+        where : {
+            sectionId : params.sectionId,
+        }
+    })
     return (
         <SectionsDetails
             course={course}
@@ -109,7 +111,8 @@ const SectionDetailsPage = async ({ params }) => {
             resources={resources}
             progress={progress}
             nextSection={nextSection}
-            isOwn={isOwn}
+            isOwn={!!ownCourse}
+            comments={comments}
         />
     );
 };

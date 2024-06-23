@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import z from "zod";
 const CommentInput = ({ sectionId, courseId }) => {
-
+    const router = useRouter();
     const formSchema = z.object({
         content: z.string().min(1, {
             message: "Le commentaire est trop court"
@@ -30,6 +30,7 @@ const CommentInput = ({ sectionId, courseId }) => {
             console.log(values)
             await axios.post(`/api/courses/${courseId}/sections/${sectionId}/comments`, values)
             toast.success("Commentaire ajouté avec succès");
+            router.refresh();
 
         } catch {
             toast.error("Quelque chose a mal tourné lors de l'ajout du commentaire");
@@ -55,7 +56,7 @@ const CommentInput = ({ sectionId, courseId }) => {
                     )}
                 />
                 <div className="flex items-center gap-x-2">
-                    <Button type="submit" disabled={!isValid || isSubmitting} >
+                    <Button type="submit" disabled={!isValid || isSubmitting} className="bg-blue-800 hover:bg-blue-800/80">
                         Enregistrer les modifications
                     </Button>
                 </div>
