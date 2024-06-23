@@ -1,13 +1,4 @@
 "use client";
-
-import {
-    Course,
-    MuxData,
-    Progress,
-    Purchase,
-    Resource,
-    Section,
-} from "@prisma/client";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import axios from "axios";
@@ -19,6 +10,8 @@ import MuxPlayer from "@mux/mux-player-react";
 import Link from "next/link";
 import ProgressButton from "./ProgressButton";
 import SectionMenu from "../layout/SectionMenu";
+import {useConfettiStore} from "@/hooks/use-confetti-store";
+import {useRouter} from "next/navigation";
 
 
 const SectionsDetails =  ({
@@ -30,8 +23,11 @@ const SectionsDetails =  ({
                               progress,
                               nextSection
 }) => {
+    const router = useRouter();
+    const confetti = useConfettiStore();
     const [isLoading, setIsLoading] = useState(false);
     const isLocked = !purchase && !section.isFree;
+    const completeOnEnd = !!purchase && !progress?.isCompleted;
 
     const buyCourse = async () => {
         try {
@@ -45,6 +41,30 @@ const SectionsDetails =  ({
             setIsLoading(false);
         }
     };
+
+    const onEnd = async () => {
+
+            try {
+                if (completeOnEnd) {
+                    await axios.post(`/api/courses/${course.id}/sections/${section.id}/progress`, { isCompleted: true });
+                }
+
+            } catch {
+                toast.error("Something went wrong.");
+            }
+
+            if (!section.id) {
+                confetti.onOpen();
+                toast.success("Course successfully completed");
+            } else {
+                toast.success("Chapter successfully completed");
+            }
+
+            router.refresh();
+            if (section.id) {
+                router.push(`/courses/${course.id}/sections/${section.id}`);
+            }
+        }
 
     return (
         <div className="px-6 py-4 flex flex-col gap-5">
@@ -85,6 +105,8 @@ const SectionsDetails =  ({
                 <MuxPlayer
                     playbackId={muxData?.playbackId || ""}
                     className="md:max-w-[600px]"
+                    onEnded={onEnd}
+                    autoPlay
                 />
             )}
 
