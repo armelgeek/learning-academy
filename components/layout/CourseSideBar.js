@@ -1,9 +1,14 @@
+
 import { db } from "@/lib/db";
 import { Course, Section } from "@prisma/client";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
+import CourseSideBarItem from "@/components/courses/CourseSidebarItem";
+
+
 
 const CourseSideBar = async ({ course, studentId }) => {
+
     const publishedSections = await db.section.findMany({
         where: {
             courseId: course.id,
@@ -53,13 +58,14 @@ const CourseSideBar = async ({ course, studentId }) => {
                 Overview
             </Link>
             {publishedSections.map((section) => (
-                <Link
+                <CourseSideBarItem
                     key={section.id}
-                    href={`/courses/${course.id}/sections/${section.id}`}
-                    className="p-3 rounded-lg hover:bg-[#FFF8EB] mt-4"
-                >
-                    {section.title}
-                </Link>
+                    id={section.id}
+                    label={section.title}
+                    isCompleted={!!section.progress?.[0]?.isCompleted}
+                    courseId={course.id}
+                    isLocked={!section.isFree && !purchase}
+                />
             ))}
         </div>
     );

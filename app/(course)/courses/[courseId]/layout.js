@@ -30,7 +30,6 @@ const CourseDetailsLayout = async ({ children, params }) => {
     if (!course) {
         return redirect("/");
     }
-
     return (
         <div className="h-full flex flex-col">
             <Topbar />
