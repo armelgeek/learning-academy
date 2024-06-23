@@ -12,6 +12,8 @@ import ProgressButton from "./ProgressButton";
 import SectionMenu from "../layout/SectionMenu";
 import {useConfettiStore} from "@/hooks/use-confetti-store";
 import {useRouter} from "next/navigation";
+import CommentInput from "@/components/sections/CommentInput";
+import {Separator} from "@/components/ui/separator";
 
 
 const SectionsDetails =  ({ course, section, purchase, muxData, resources, progress, nextSection, isOwn }) => {
@@ -64,18 +66,18 @@ const SectionsDetails =  ({ course, section, purchase, muxData, resources, progr
                 <h1 className="text-2xl font-bold max-md:mb-4">{section.title}</h1>
 
                 <div className="flex gap-4">
-                    <SectionMenu course={course} />
+                    <SectionMenu course={course}/>
                     {purchase || isOwn ? (
-                            <ProgressButton
-                                courseId={course.id}
-                                sectionId={section.id}
-                                nextSection={nextSection?.id}
-                                isCompleted={!!progress?.isCompleted}
-                            />
+                        <ProgressButton
+                            courseId={course.id}
+                            sectionId={section.id}
+                            nextSection={nextSection?.id}
+                            isCompleted={!!progress?.isCompleted}
+                        />
                     ) : (
                         <Button onClick={buyCourse}>
                             {isLoading ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
+                                <Loader2 className="h-4 w-4 animate-spin"/>
                             ) : (
                                 <p>Buy this course</p>
                             )}
@@ -85,11 +87,11 @@ const SectionsDetails =  ({ course, section, purchase, muxData, resources, progr
                 </div>
             </div>
 
-            <ReadText value={section.description || ""} />
+            <ReadText value={section.description || ""}/>
 
             {isLocked ? (
                 <div className="px-10 flex flex-col gap-5 items-center bg-[#FFF8EB]">
-                    <Lock className="h-8 w-8" />
+                    <Lock className="h-8 w-8"/>
                     <p className="text-sm font-bold">
                         Video for this section is locked!. Please buy the course to access
                     </p>
@@ -102,7 +104,13 @@ const SectionsDetails =  ({ course, section, purchase, muxData, resources, progr
                     autoPlay
                 />
             )}
-
+            <div>
+                
+                <CommentInput
+                    courseId={course.id}
+                    sectionId={section.id}
+                />
+            </div>
             <div>
                 <h2 className="text-xl font-bold mb-5">Resources</h2>
                 {resources.map((resource) => (
@@ -112,7 +120,7 @@ const SectionsDetails =  ({ course, section, purchase, muxData, resources, progr
                         target="_blank"
                         className="flex items-center bg-[#FFF8EB] rounded-lg text-sm font-medium p-3"
                     >
-                        <File className="h-4 w-4 mr-4" />
+                        <File className="h-4 w-4 mr-4"/>
                         {resource.name}
                     </Link>
                 ))}
